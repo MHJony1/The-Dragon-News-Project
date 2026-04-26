@@ -13,8 +13,11 @@ import {
   ArrowRight,
   Layers,
 } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState({
     score: 0,
@@ -51,13 +54,37 @@ const RegisterPage = () => {
   };
 
   const handleRegister = async (data) => {
+    const { email, name, photo, password } = data;
+    console.log(email, name, photo, password);
+
+    const { data: res, error } = await authClient.signUp.email(
+      {
+        name: name, // required
+        email: email, // required
+        password: password, // required
+        image: photo,
+        // callbackURL: '/',
+      },
+      {
+        onSuccess: () => {
+          router.push('/login');
+        },
+      },
+    );
+
+    console.log(res, error);
+
+    if (error) {
+      alert(error.message);
+    }
+    if (res) {
+      alert('Registration successfull');
+    }
+
     if (!termsAccepted) {
       setTermsError(true);
       return;
     }
-    const { email, name, photo, password } = data;
-    console.log(email, name, photo, password);
-    // TODO: connect to your auth logic here
   };
 
   return (

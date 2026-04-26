@@ -1,79 +1,10 @@
-// 'use client';
-
-// import Link from 'next/link';
-// import { useForm } from 'react-hook-form';
-
-// const LoginPage = () => {
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm();
-
-//   const handleLogin = (data) => {
-//     console.log(data);
-//   };
-
-//   return (
-//     <div className="container mx-auto min-h-[90vh] flex justify-center items-center bg-slate-100">
-//       <div className="p-15 rounded-xl bg-white">
-//         <h1 className="text-3xl font-bold mb-5">Login Your Account</h1>
-//         <hr className="mb-5" />
-
-//         <form className="space-y-2" onSubmit={handleSubmit(handleLogin)}>
-//           <fieldset className="fieldset">
-//             <legend className="fieldset-legend text-[16px]">
-//               Email Address
-//             </legend>
-//             <input
-//               type="email"
-//               {...register('email', { required: true })}
-//               className="input bg-gray-100"
-//               placeholder="Enter your email address"
-//             />
-//             <p className="text-red-500 text-sm font-medium">
-//               {errors.email?.type === 'required' && 'Email is required'}
-//             </p>
-//           </fieldset>
-
-//           <fieldset className="fieldset">
-//             <legend className="fieldset-legend text-[16px]">Password</legend>
-//             <input
-//               type="password"
-//               {...register('password', { required: true })}
-//               className="input bg-gray-100"
-//               placeholder="Enter your password"
-//             />
-//             <p className="text-red-500 text-sm font-medium">
-//               {errors.password?.type === 'required' && 'Password is required'}
-//             </p>
-//           </fieldset>
-
-//           <div className="mt-5">
-//             <button className="btn w-full bg-gray-700 text-white hover:bg-indigo-700 text-[16px]">
-//               Login
-//             </button>
-//           </div>
-//           <div className="flex justify-center gap-3 mt-4 text-sm font-semibold">
-//             <p>Don&apos;t have an account?</p>
-//             <Link href={'/register'} className="text-[#D72050] hover:underline">
-//               Register Now
-//             </Link>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LoginPage;
-
 'use client';
 
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Layers } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,7 +18,21 @@ const LoginPage = () => {
   const handleLogin = async (data) => {
     const { email, password } = data;
     console.log(email, password);
-    // TODO: connect to your auth logic here
+
+    const { data: res, error } = await authClient.signIn.email({
+      email: email,
+      password: password,
+      rememberMe: true,
+      callbackURL: '/',
+    });
+    console.log(res, error);
+
+    if (error) {
+      alert(error.message);
+    }
+    if (res) {
+      alert('Login successfull');
+    }
   };
 
   return (
