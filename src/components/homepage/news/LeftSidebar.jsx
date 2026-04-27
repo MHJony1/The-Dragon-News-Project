@@ -32,7 +32,7 @@ const LeftSidebar = ({ categories, activeId }) => {
     <div className="space-y-8">
       {/* Category Section */}
       <div>
-        <h2 className="font-semibold text-gray-800 text-xl mb-5">
+        <h2 className="font-semibold text-gray-600 text-xl mb-5">
           All Category
         </h2>
         <div className="flex flex-col">
