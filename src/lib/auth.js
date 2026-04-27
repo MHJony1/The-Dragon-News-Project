@@ -9,24 +9,31 @@ const client = new MongoClient(process.env.MONGODB_AUTH_URI);
 const db = client.db("dragonNews");
 
 export const auth = betterAuth({
-   //...other options
+  trustedOrigins: [
+    "https://the-dragon-news-project-alpha.vercel.app",
+    "http://localhost:3000"
+  ],
+
   emailAndPassword: { 
     enabled: true, 
   },
  
   socialProviders: {
-        google: { 
-            clientId: process.env.GOOGLE_CLIENT_ID, 
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
-        }, 
-         github: { 
-            clientId: process.env.GITHUB_CLIENT_ID, 
-            clientSecret: process.env.GITHUB_CLIENT_SECRET, 
-        }, 
-    },
+    google: { 
+      clientId: process.env.GOOGLE_CLIENT_ID, 
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+    }, 
+    github: { 
+      clientId: process.env.GITHUB_CLIENT_ID, 
+      clientSecret: process.env.GITHUB_CLIENT_SECRET, 
+    }, 
+  },
 
   database: mongodbAdapter(db, {
-    // Optional: if you don't provide a client, database transactions won't be enabled.
     client
   }),
+
+  advanced: {
+    useSecureCookies: true, // Vercel-এ HTTPS এর জন্য এটি জরুরি
+  }
 });
